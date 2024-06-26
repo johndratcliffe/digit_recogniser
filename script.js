@@ -19,12 +19,12 @@ for (i = 1; i < csv.length; i++) {
   INPUTS.push(csv[i].slice(1, 785))
   OUTPUTS.push(csv[i][0])
 }
-tf.util.shuffleCombo(INPUTS, OUTPUTS)
+
 const INPUTS_TENSOR = tf.tensor2d(INPUTS)
 const OUTPUTS_TENSOR = tf.oneHot(tf.tensor1d(OUTPUTS, 'int32'), 10)
 
 const model = tf.sequential()
-model.add(tf.layers.dense({ inputShape: [784], units: 32, activation: 'relu' }))
+model.add(tf.layers.dense({ inputShape: [784], units: 16, activation: 'relu' }))
 model.add(tf.layers.dense({ units: 16, activation: 'relu' }))
 model.add(tf.layers.dense({ units: 10, activation: 'softmax' }))
 model.summary()
@@ -40,8 +40,8 @@ async function train () {
   const results = await model.fit(INPUTS_TENSOR, OUTPUTS_TENSOR, {
     shuffle: true,
     validationSplit: 0.2,
-    batchSize: 512,
-    epochs: 50,
+    batchSize: 1024,
+    epochs: 100,
     callbacks: { onEpochEnd: logProgress }
   })
 
